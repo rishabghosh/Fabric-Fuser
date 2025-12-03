@@ -15,5 +15,5 @@ export const DEFAULT_CONFIG: LogoConfig = {
   rotation: 0,
   opacity: 0.9,
   blendMode: 'multiply', // Multiply usually looks best for dark ink on light clothes, or overlay for integration
-  fold_shadow_intensity: 0.5,
+  fold_shadow_intensity: 0,
 };

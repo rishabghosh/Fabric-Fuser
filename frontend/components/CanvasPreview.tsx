@@ -65,7 +65,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
     return false;
   };
 
-  // Function to call backend API
+  // Function to call backend API (only for fold shadow effect)
   const processWithBackend = async () => {
     if (!mainImageSrc || !logoImageSrc) return;
 
@@ -118,10 +118,17 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
     }
   };
 
-  // Trigger backend processing when images or config change
+  // Decide whether to use backend or frontend rendering
   useEffect(() => {
     if (mainImageSrc && logoImageSrc) {
-      processWithBackend();
+      // Only call backend if fold shadow effect is needed
+      if (config.fold_shadow_intensity > 0) {
+        processWithBackend();
+      } else {
+        // Clear processed image to use frontend rendering
+        setProcessedImage(null);
+        setError(null);
+      }
     } else {
       setProcessedImage(null);
       setError(null);
@@ -147,7 +154,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
     ctx.imageSmoothingQuality = 'high';
 
     if (processedImage) {
-      // Draw processed image from backend
+      // Draw processed image from backend (with fold shadow effect)
       const img = new Image();
       img.onload = () => {
         ctx.clearRect(0, 0, dimensions.width, dimensions.height);
@@ -157,6 +164,74 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
         ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
       };
       img.src = processedImage;
+    } else if (mainImageSrc && logoImageSrc) {
+      // Client-side rendering: apply transformations directly on canvas
+      const mainImg = new Image();
+      const logoImg = new Image();
+
+      let mainLoaded = false;
+      let logoLoaded = false;
+
+      const drawComposite = () => {
+        if (!mainLoaded || !logoLoaded) return;
+
+        ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+
+        // Calculate main image scale to fit canvas
+        const mainScale = Math.min(dimensions.width / mainImg.width, dimensions.height / mainImg.height);
+        const mainWidth = mainImg.width * mainScale;
+        const mainHeight = mainImg.height * mainScale;
+        const mainX = (dimensions.width - mainWidth) / 2;
+        const mainY = (dimensions.height - mainHeight) / 2;
+
+        // Draw main image
+        ctx.drawImage(mainImg, mainX, mainY, mainWidth, mainHeight);
+
+        // Calculate logo dimensions based on scale config
+        const logoScaledWidth = mainWidth * config.scale;
+        const logoScaledHeight = (logoImg.height / logoImg.width) * logoScaledWidth;
+
+        // Calculate logo position based on config (0-1 range maps to main image dimensions)
+        const logoCenterX = mainX + (mainWidth * config.horizontal);
+        const logoCenterY = mainY + (mainHeight * config.vertical);
+
+        // Save context state
+        ctx.save();
+
+        // Move to logo center position
+        ctx.translate(logoCenterX, logoCenterY);
+
+        // Apply rotation
+        ctx.rotate((config.rotation * Math.PI) / 180);
+
+        // Apply opacity
+        ctx.globalAlpha = config.opacity;
+
+        // Draw logo centered at the transformed origin
+        ctx.drawImage(
+          logoImg,
+          -logoScaledWidth / 2,
+          -logoScaledHeight / 2,
+          logoScaledWidth,
+          logoScaledHeight
+        );
+
+        // Restore context state
+        ctx.restore();
+      };
+
+      mainImg.onload = () => {
+        mainLoaded = true;
+        drawComposite();
+      };
+
+      logoImg.onload = () => {
+        logoLoaded = true;
+        drawComposite();
+      };
+
+      mainImg.src = mainImageSrc;
+      logoImg.src = logoImageSrc;
     } else if (mainImageSrc && !logoImageSrc) {
       // Only main image
       const mainImg = new Image();
@@ -179,7 +254,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
       ctx.font = '16px sans-serif';
       ctx.fillText("Upload Main Image and Logo", dimensions.width / 2, dimensions.height / 2);
     }
-  }, [processedImage, mainImageSrc, logoImageSrc, dimensions]);
+  }, [processedImage, mainImageSrc, logoImageSrc, dimensions, config]);
 
   const handleDownload = () => {
     if (canvasRef.current) {

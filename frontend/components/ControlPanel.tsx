@@ -11,6 +11,25 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ config, setConfig }) => {
   const [isKeyboardActive, setIsKeyboardActive] = useState(false);
   const toggleBtnRef = useRef<HTMLButtonElement>(null);
 
+  // Handler for arrow key input with shift modifier
+  const handleInputKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    field: keyof LogoConfig,
+    normalStep: number,
+    shiftStep: number,
+    min: number,
+    max: number
+  ) => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const step = e.shiftKey ? shiftStep : normalStep;
+      const direction = e.key === 'ArrowUp' ? 1 : -1;
+      const currentValue = config[field] as number;
+      const newValue = Math.max(min, Math.min(max, currentValue + (direction * step)));
+      handleChange(field, newValue);
+    }
+  };
+
   useEffect(() => {
     if (!isKeyboardActive) return;
 
@@ -107,6 +126,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ config, setConfig }) => {
                     min="0" max="1" step="0.001"
                     value={Number(config.horizontal.toFixed(3))}
                     onChange={(e) => handleChange('horizontal', parseFloat(e.target.value))}
+                    onKeyDown={(e) => handleInputKeyDown(e, 'horizontal', 0.001, 0.01, 0, 1)}
                     className="w-16 text-xs p-1 border border-gray-300 rounded text-right focus:ring-1 focus:ring-indigo-500 focus:outline-none bg-white text-black"
                 />
             </div>
@@ -126,6 +146,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ config, setConfig }) => {
                     min="0" max="1" step="0.001"
                     value={Number(config.vertical.toFixed(3))}
                     onChange={(e) => handleChange('vertical', parseFloat(e.target.value))}
+                    onKeyDown={(e) => handleInputKeyDown(e, 'vertical', 0.001, 0.01, 0, 1)}
                     className="w-16 text-xs p-1 border border-gray-300 rounded text-right focus:ring-1 focus:ring-indigo-500 focus:outline-none bg-white text-black"
                 />
             </div>
@@ -155,6 +176,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ config, setConfig }) => {
                         step="0.1"
                         value={(config.scale * 100).toFixed(1)}
                         onChange={(e) => handleChange('scale', parseFloat(e.target.value) / 100)}
+                        onKeyDown={(e) => handleInputKeyDown(e, 'scale', 0.01, 0.1, 0.01, 3)}
                         className="w-16 text-xs p-1 border border-gray-300 rounded text-right focus:ring-1 focus:ring-indigo-500 focus:outline-none bg-white text-black"
                     />
                     <span className="text-xs text-gray-400">%</span>
@@ -180,6 +202,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ config, setConfig }) => {
                         min="0" max="360"
                         value={config.rotation}
                         onChange={(e) => handleChange('rotation', parseFloat(e.target.value))}
+                        onKeyDown={(e) => handleInputKeyDown(e, 'rotation', 1, 10, 0, 360)}
                         className="w-12 text-xs p-1 border border-gray-300 rounded text-right focus:ring-1 focus:ring-indigo-500 focus:outline-none bg-white text-black"
                     />
                     <span className="text-xs text-gray-400">°</span>
