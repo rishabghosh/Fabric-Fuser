@@ -1,0 +1,5 @@
+{
+  "name": "TeeJutsu - Smart Mockup Generator",
+  "description": "A web-based tool to overlay logos onto apparel images with realistic blending (folds/wrinkles simulation) and generation of equivalent Python OpenCV code.",
+  "requestFramePermissions": []
+}
