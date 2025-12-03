@@ -1,6 +1,6 @@
-# TeeJutsu Backend
+# FabricFuser Backend
 
-Python backend service for TeeJutsu mockup generator. Uses FastAPI and OpenCV for image processing with realistic fold/wrinkle simulation.
+Python backend service for FabricFuser mockup generator. Uses FastAPI and OpenCV for image processing with realistic fold/wrinkle simulation.
 
 ## Tech Stack
 

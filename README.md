@@ -1,4 +1,4 @@
-# TeeJutsu - Smart Mockup Generator
+# FabricFuser - Smart Mockup Generator
 
 A full-stack application for creating realistic product mockups with intelligent fold/shadow simulation. Perfect for designers creating t-shirt, hoodie, and apparel mockups.
 
@@ -14,7 +14,7 @@ A full-stack application for creating realistic product mockups with intelligent
 ## Project Structure
 
 ```
-teejutsu/
+fabricfuser/
 ├── frontend/          # React + Vite frontend
 │   ├── components/    # UI components
 │   ├── utils/         # Code generators

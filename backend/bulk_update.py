@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Bulk Update Script for TeeJutsu
+Bulk Update Script for FabricFuser
 Processes multiple images with logo embedding based on JSON configuration
 """
 

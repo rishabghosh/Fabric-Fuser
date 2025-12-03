@@ -154,7 +154,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
   const handleDownload = () => {
     if (canvasRef.current) {
         const link = document.createElement('a');
-        link.download = 'teejutsu-mockup.png';
+        link.download = 'fabricfuser-mockup.png';
         link.href = canvasRef.current.toDataURL('image/png', 1.0); // Max quality
         link.click();
     }

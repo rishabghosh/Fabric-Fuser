@@ -5,7 +5,7 @@ import json
 import io
 from core import process_mockup
 
-app = FastAPI(title="TeeJutsu Backend API")
+app = FastAPI(title="FabricFuser Backend API")
 
 # Enable CORS for frontend
 app.add_middleware(
@@ -18,7 +18,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "TeeJutsu Backend API", "status": "running"}
+    return {"message": "FabricFuser Backend API", "status": "running"}
 
 @app.post("/overlay")
 async def create_overlay(

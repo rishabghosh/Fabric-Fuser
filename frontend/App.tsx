@@ -73,7 +73,7 @@ const App: React.FC = () => {
             <div className="bg-indigo-600 p-2 rounded-lg text-white">
               <Scissors size={20} />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-gray-900">TeeJutsu</h1>
+            <h1 className="text-xl font-bold tracking-tight text-gray-900">FabricFuser</h1>
             <span className="hidden sm:inline-block text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full border border-gray-200">
               Mockup Generator
             </span>

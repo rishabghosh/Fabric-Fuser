@@ -1,7 +1,7 @@
 {
-  "name": "teejutsu-monorepo",
+  "name": "fabricfuser-monorepo",
   "version": "1.0.0",
-  "description": "TeeJutsu - Smart Mockup Generator",
+  "description": "FabricFuser - Smart Mockup Generator",
   "private": true,
   "scripts": {
     "install": "npm run install:frontend && npm run install:backend",
