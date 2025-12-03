@@ -1,0 +1,45 @@
+{
+  "images": [
+    {
+      "filename": "tshirt-white.jpg",
+      "config": {
+        "x": 0.5,
+        "y": 0.45,
+        "scale": 0.3,
+        "rotation": 0,
+        "opacity": 0.9,
+        "displacementStrength": 0.5
+      }
+    },
+    {
+      "filename": "tshirt-black.jpg",
+      "config": {
+        "x": 0.5,
+        "y": 0.48,
+        "scale": 0.35,
+        "rotation": -5,
+        "opacity": 0.85,
+        "displacementStrength": 0.6
+      }
+    },
+    {
+      "filename": "hoodie-front.jpg",
+      "config": {
+        "x": 0.5,
+        "y": 0.42,
+        "scale": 0.25,
+        "rotation": 0,
+        "opacity": 0.9,
+        "displacementStrength": 0.7
+      }
+    }
+  ],
+  "default_config": {
+    "x": 0.5,
+    "y": 0.5,
+    "scale": 0.3,
+    "rotation": 0,
+    "opacity": 0.9,
+    "displacementStrength": 0.5
+  }
+}
