@@ -1,22 +1,32 @@
 {
-  "name": "teejutsu---smart-mockup-generator",
+  "name": "teejutsu-monorepo",
+  "version": "1.0.0",
+  "description": "TeeJutsu - Smart Mockup Generator",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "lucide-react": "^0.554.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "install": "npm run install:frontend && npm run install:backend",
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && python3 -m pip install -r requirements.txt",
+    "reinstall": "npm run clean && npm install",
+    "reinstall:backend": "cd backend && python3 -m pip install --force-reinstall -r requirements.txt",
+    "dev": "concurrently \"npm run frontend\" \"npm run backend\"",
+    "frontend": "cd frontend && npm run dev",
+    "backend": "cd backend && uvicorn main:app --reload",
+    "build": "cd frontend && npm run build",
+    "preview": "cd frontend && npm run preview",
+    "clean": "rm -rf node_modules && rm -rf frontend/node_modules frontend/dist frontend/.vite && rm -rf backend/__pycache__ backend/*.pyc backend/venv backend/env"
   },
   "devDependencies": {
-    "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0"
-  }
+    "concurrently": "^9.2.1"
+  },
+  "keywords": [
+    "mockup",
+    "design",
+    "tshirt",
+    "apparel",
+    "opencv",
+    "react"
+  ],
+  "author": "",
+  "license": "MIT"
 }

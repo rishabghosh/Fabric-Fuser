@@ -1,64 +1,72 @@
-# TeeJutsu Backend Service
+# TeeJutsu Backend
 
-This directory contains the Python backend service for the TeeJutsu Mockup Generator. It uses **FastAPI** and **OpenCV** to process images and apply logos with realistic fold/wrinkle simulation.
+Python backend service for TeeJutsu mockup generator. Uses FastAPI and OpenCV for image processing with realistic fold/wrinkle simulation.
 
-## Structure
+## Tech Stack
 
-- `main.py`: The API entry point (FastAPI).
-- `core.py`: Core image processing logic (OpenCV).
-- `requirements.txt`: Python dependencies.
+- **FastAPI** - Web framework
+- **OpenCV** - Image processing
+- **Uvicorn** - ASGI server
 
-## Installation
+## Setup
 
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-
-2. Create a virtual environment (optional but recommended):
+1. Create a virtual environment:
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. Install dependencies:
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-## Usage
+## Running the Server
 
-Start the server:
 ```bash
 uvicorn main:app --reload
 ```
 
-The API will be available at `http://localhost:8000`.
+The API will be available at `http://localhost:8000`
 
 ## API Endpoints
 
 ### `POST /overlay`
 
-Accepts a main image, a logo image, and configuration parameters to generate a mockup.
+Process mockup with logo overlay.
 
-**Parameters:**
-- `main_image` (File): The background jacket/apparel image.
-- `logo_image` (File): The logo/graphic to overlay.
-- `config` (String): JSON string containing:
-  - `x` (float): Horizontal position (0-1).
-  - `y` (float): Vertical position (0-1).
-  - `scale` (float): Scale relative to main image width (e.g., 0.3).
-  - `rotation` (float): Rotation in degrees.
-  - `opacity` (float): Opacity (0-1).
-  - `displacementStrength` (float): Intensity of the fold simulation (0-1).
+**Form Parameters:**
+- `main_image` (File): Background apparel image
+- `logo_image` (File): Logo/graphic to overlay
+- `config` (String): JSON configuration with:
+  - `x` (float): Horizontal position (0-1)
+  - `y` (float): Vertical position (0-1)
+  - `scale` (float): Logo scale relative to image width
+  - `rotation` (float): Rotation in degrees
+  - `opacity` (float): Opacity (0-1)
+  - `displacementStrength` (float): Fold simulation intensity (0-1)
 
-**Example (cURL):**
+**Example with cURL:**
 ```bash
 curl -X POST "http://localhost:8000/overlay" \
-  -H "accept: application/json" \
-  -H "Content-Type: multipart/form-data" \
   -F "main_image=@jacket.jpg" \
   -F "logo_image=@logo.png" \
-  -F "config={\"x\": 0.5, \"y\": 0.5, \"scale\": 0.3, \"rotation\": 0, \"opacity\": 0.9, \"displacementStrength\": 0.5}" \
+  -F 'config={"x": 0.5, "y": 0.5, "scale": 0.3, "rotation": 0, "opacity": 0.9, "displacementStrength": 0.5}' \
   --output result.jpg
 ```
+
+### `GET /health`
+
+Health check endpoint.
+
+### `GET /`
+
+API info endpoint.
+
+## Features
+
+- **Realistic fold simulation** using luminance-based displacement mapping
+- **Alpha channel support** for PNG logos
+- **Image transformations** (rotation, scaling, positioning)
+- **Blend modes** and opacity control
+- **CORS enabled** for frontend integration
