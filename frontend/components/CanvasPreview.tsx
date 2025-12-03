@@ -16,6 +16,9 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Rate limiting: track request timestamps (max 3 per second)
+  const requestTimestamps = useRef<number[]>([]);
+
   // Resize observer to keep canvas responsive
   useEffect(() => {
     if (!containerRef.current) return;
@@ -41,9 +44,36 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
     return new File([blob], filename, { type: blob.type });
   };
 
+  // Rate limiting check: allow max 3 requests per second
+  const canMakeRequest = (): boolean => {
+    const now = Date.now();
+    const oneSecondAgo = now - 1000;
+
+    // Remove timestamps older than 1 second
+    requestTimestamps.current = requestTimestamps.current.filter(
+      timestamp => timestamp > oneSecondAgo
+    );
+
+    // Check if we've made less than 3 requests in the last second
+    if (requestTimestamps.current.length < 3) {
+      requestTimestamps.current.push(now);
+      return true;
+    }
+
+    // Rate limit exceeded - ditch this request
+    console.warn('Rate limit exceeded: Max 3 requests per second. Request ditched.');
+    return false;
+  };
+
   // Function to call backend API
   const processWithBackend = async () => {
     if (!mainImageSrc || !logoImageSrc) return;
+
+    // Rate limiting check - ditch request if limit exceeded
+    if (!canMakeRequest()) {
+      console.log('Request ditched due to rate limiting');
+      return;
+    }
 
     try {
       setIsDrawing(true);
