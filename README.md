@@ -63,6 +63,8 @@ teejutsu/
 | `npm run build` | Build frontend for production |
 | `npm run preview` | Preview production build |
 | `npm run clean` | Clean all artifacts |
+| `npm run reinstall` | Clean and reinstall everything |
+| `npm run reinstall:backend` | Force reinstall backend packages |
 
 ## Manual Setup (Alternative)
 
@@ -95,8 +97,9 @@ teejutsu/
 
 ### Backend Setup
 
-The frontend works standalone with canvas-based preview. The backend is needed for:
-- Server-side image processing
+**Important:** The backend is required for the frontend to work properly. The frontend now uses the backend API for real-time image processing with OpenCV, providing:
+- High-quality displacement mapping for realistic fold effects
+- Better image processing quality than browser Canvas
 - Batch operations
 - API integration
 
