@@ -302,10 +302,10 @@ export class CodeGenerator {
     return this.overlayTemplate
       .replace('{{SCALE}}', this.config.scale.toFixed(3))
       .replace('{{ROTATION}}', this.config.rotation.toString())
-      .replace('{{POS_X}}', this.config.x.toFixed(3))
-      .replace('{{POS_Y}}', this.config.y.toFixed(3))
+      .replace('{{POS_X}}', this.config.horizontal.toFixed(3))
+      .replace('{{POS_Y}}', this.config.vertical.toFixed(3))
       .replace('{{OPACITY}}', this.config.opacity.toString())
-      .replace('{{DISP_STRENGTH}}', this.config.displacementStrength.toFixed(2))
+      .replace('{{DISP_STRENGTH}}', this.config.fold_shadow_intensity.toFixed(2))
       .replace('{{MAIN_IMAGE}}', mainImageName)
       .replace('{{LOGO_IMAGE}}', logoImageName);
   }
@@ -318,10 +318,10 @@ export class CodeGenerator {
     return this.batchTemplate
       .replace('{{SCALE}}', this.config.scale.toFixed(3))
       .replace('{{ROTATION}}', this.config.rotation.toString())
-      .replace('{{POS_X}}', this.config.x.toFixed(3))
-      .replace('{{POS_Y}}', this.config.y.toFixed(3))
+      .replace('{{POS_X}}', this.config.horizontal.toFixed(3))
+      .replace('{{POS_Y}}', this.config.vertical.toFixed(3))
       .replace('{{OPACITY}}', this.config.opacity.toString())
-      .replace('{{DISP_STRENGTH}}', this.config.displacementStrength.toFixed(2))
+      .replace('{{DISP_STRENGTH}}', this.config.fold_shadow_intensity.toFixed(2))
       .replace('{{LOGO_IMAGE}}', logoImageName);
   }
 }

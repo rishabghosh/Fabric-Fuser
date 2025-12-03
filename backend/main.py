@@ -32,7 +32,7 @@ async def create_overlay(
     Parameters:
     - main_image: Background apparel image
     - logo_image: Logo/graphic to overlay
-    - config: JSON string with parameters (x, y, scale, rotation, opacity, displacementStrength)
+    - config: JSON string with parameters (horizontal, vertical, scale, rotation, opacity, fold_shadow_intensity)
     """
     try:
         # Parse config

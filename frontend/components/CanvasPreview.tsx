@@ -58,12 +58,12 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
       formData.append('main_image', mainFile);
       formData.append('logo_image', logoFile);
       formData.append('config', JSON.stringify({
-        x: config.x,
-        y: config.y,
+        horizontal: config.horizontal,
+        vertical: config.vertical,
         scale: config.scale,
         rotation: config.rotation,
         opacity: config.opacity,
-        displacementStrength: config.displacementStrength
+        fold_shadow_intensity: config.fold_shadow_intensity
       }));
 
       // Call backend API

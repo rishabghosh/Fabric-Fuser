@@ -10,7 +10,7 @@ def process_mockup(main_image_bytes, logo_image_bytes, config):
     Args:
         main_image_bytes: Binary content of main image
         logo_image_bytes: Binary content of logo image
-        config: Dict with keys: x, y, scale, rotation, opacity, displacementStrength
+        config: Dict with keys: horizontal, vertical, scale, rotation, opacity, fold_shadow_intensity
 
     Returns:
         Processed image as JPEG bytes
@@ -23,12 +23,12 @@ def process_mockup(main_image_bytes, logo_image_bytes, config):
     logo_img = cv2.imdecode(logo_arr, cv2.IMREAD_UNCHANGED)
 
     # Get config parameters
-    x = config.get('x', 0.5)
-    y = config.get('y', 0.5)
+    x = config.get('horizontal', 0.5)
+    y = config.get('vertical', 0.5)
     scale = config.get('scale', 0.3)
     rotation = config.get('rotation', 0)
     opacity = config.get('opacity', 0.9)
-    displacement_strength = config.get('displacementStrength', 0.5)
+    displacement_strength = config.get('fold_shadow_intensity', 0.5)
 
     h, w = main_img.shape[:2]
 

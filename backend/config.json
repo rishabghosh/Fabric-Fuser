@@ -1,0 +1,24 @@
+[
+  {
+    "filename": "H_NAR_0001-f.png",
+    "config": {
+      "horizontal": 0.514,
+      "vertical": 0.797,
+      "scale": 0.15,
+      "rotation": 0,
+      "opacity": 0.86,
+      "fold_shadow_intensity": 0.91
+    }
+  },
+  {
+    "filename": "H_BER_0001-f.png",
+    "config": {
+      "horizontal": 0.514,
+      "vertical": 0.797,
+      "scale": 0.15,
+      "rotation": 0,
+      "opacity": 1,
+      "fold_shadow_intensity": 0.91
+    }
+  }
+]

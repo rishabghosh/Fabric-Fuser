@@ -40,12 +40,12 @@ const App: React.FC = () => {
   const batchCode = generator.generateBatchCode(logoImageName);
   
   const configJson = JSON.stringify({
-    horizontal: Number(config.x.toFixed(3)),
-    vertical: Number(config.y.toFixed(3)),
+    horizontal: Number(config.horizontal.toFixed(3)),
+    vertical: Number(config.vertical.toFixed(3)),
     scale: Number(config.scale.toFixed(3)),
     rotation: Math.round(config.rotation),
     opacity: Number(config.opacity.toFixed(2)),
-    fold_shadow_intensity: Number(config.displacementStrength.toFixed(2))
+    fold_shadow_intensity: Number(config.fold_shadow_intensity.toFixed(2))
   }, null, 2);
 
   const getDisplayContent = () => {

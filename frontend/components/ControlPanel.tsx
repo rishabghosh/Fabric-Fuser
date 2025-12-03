@@ -26,19 +26,19 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ config, setConfig }) => {
       switch (e.key) {
         case 'ArrowUp':
           e.preventDefault();
-          setConfig(prev => ({ ...prev, y: Math.max(0, Math.min(1, prev.y - STEP)) }));
+          setConfig(prev => ({ ...prev, vertical: Math.max(0, Math.min(1, prev.vertical - STEP)) }));
           break;
         case 'ArrowDown':
           e.preventDefault();
-          setConfig(prev => ({ ...prev, y: Math.max(0, Math.min(1, prev.y + STEP)) }));
+          setConfig(prev => ({ ...prev, vertical: Math.max(0, Math.min(1, prev.vertical + STEP)) }));
           break;
         case 'ArrowLeft':
           e.preventDefault();
-          setConfig(prev => ({ ...prev, x: Math.max(0, Math.min(1, prev.x - STEP)) }));
+          setConfig(prev => ({ ...prev, horizontal: Math.max(0, Math.min(1, prev.horizontal - STEP)) }));
           break;
         case 'ArrowRight':
           e.preventDefault();
-          setConfig(prev => ({ ...prev, x: Math.max(0, Math.min(1, prev.x + STEP)) }));
+          setConfig(prev => ({ ...prev, horizontal: Math.max(0, Math.min(1, prev.horizontal + STEP)) }));
           break;
         case 'Escape':
            setIsKeyboardActive(false);
@@ -105,16 +105,16 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ config, setConfig }) => {
                 <input
                     type="number"
                     min="0" max="1" step="0.001"
-                    value={Number(config.x.toFixed(3))}
-                    onChange={(e) => handleChange('x', parseFloat(e.target.value))}
+                    value={Number(config.horizontal.toFixed(3))}
+                    onChange={(e) => handleChange('horizontal', parseFloat(e.target.value))}
                     className="w-16 text-xs p-1 border border-gray-300 rounded text-right focus:ring-1 focus:ring-indigo-500 focus:outline-none bg-white text-black"
                 />
             </div>
-            <input 
-              type="range" 
-              min="0" max="1" step="0.001" 
-              value={config.x} 
-              onChange={(e) => handleChange('x', parseFloat(e.target.value))}
+            <input
+              type="range"
+              min="0" max="1" step="0.001"
+              value={config.horizontal}
+              onChange={(e) => handleChange('horizontal', parseFloat(e.target.value))}
               className="w-full mt-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
             />
           </div>
@@ -124,16 +124,16 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ config, setConfig }) => {
                 <input
                     type="number"
                     min="0" max="1" step="0.001"
-                    value={Number(config.y.toFixed(3))}
-                    onChange={(e) => handleChange('y', parseFloat(e.target.value))}
+                    value={Number(config.vertical.toFixed(3))}
+                    onChange={(e) => handleChange('vertical', parseFloat(e.target.value))}
                     className="w-16 text-xs p-1 border border-gray-300 rounded text-right focus:ring-1 focus:ring-indigo-500 focus:outline-none bg-white text-black"
                 />
             </div>
-            <input 
-              type="range" 
-              min="0" max="1" step="0.001" 
-              value={config.y} 
-              onChange={(e) => handleChange('y', parseFloat(e.target.value))}
+            <input
+              type="range"
+              min="0" max="1" step="0.001"
+              value={config.vertical}
+              onChange={(e) => handleChange('vertical', parseFloat(e.target.value))}
               className="w-full mt-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
             />
           </div>
@@ -224,13 +224,13 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ config, setConfig }) => {
                     <span>Fold Shadow Intensity</span>
                     <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1 rounded border border-indigo-200">OpenCV Sim</span>
                 </label>
-                <span className="text-xs text-gray-500">{(config.displacementStrength * 100).toFixed(0)}%</span>
+                <span className="text-xs text-gray-500">{(config.fold_shadow_intensity * 100).toFixed(0)}%</span>
             </div>
-            <input 
-            type="range" 
-            min="0" max="1" step="0.01" 
-            value={config.displacementStrength} 
-            onChange={(e) => handleChange('displacementStrength', parseFloat(e.target.value))}
+            <input
+            type="range"
+            min="0" max="1" step="0.01"
+            value={config.fold_shadow_intensity}
+            onChange={(e) => handleChange('fold_shadow_intensity', parseFloat(e.target.value))}
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
             />
             <p className="text-[10px] text-gray-400 leading-tight">

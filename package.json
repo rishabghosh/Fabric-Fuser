@@ -12,6 +12,7 @@
     "dev": "concurrently \"npm run frontend\" \"npm run backend\"",
     "frontend": "cd frontend && npm run dev",
     "backend": "cd backend && python3 -m uvicorn main:app --reload",
+    "bulk": "cd backend && python3 bulk_update.py",
     "build": "cd frontend && npm run build",
     "preview": "cd frontend && npm run preview",
     "clean": "rm -rf node_modules && rm -rf frontend/node_modules frontend/dist frontend/.vite && rm -rf backend/__pycache__ backend/*.pyc backend/venv backend/env"

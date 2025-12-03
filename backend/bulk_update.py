@@ -25,17 +25,28 @@ def load_config(config_path):
 
 def get_image_config(filename, config_data):
     """Get configuration for a specific image, or return default config"""
-    for image_config in config_data.get('images', []):
-        if image_config['filename'] == filename:
-            return image_config['config']
-    return config_data.get('default_config', {
-        'x': 0.5,
-        'y': 0.5,
+    # Handle array format directly
+    if isinstance(config_data, list):
+        for image_config in config_data:
+            if image_config['filename'] == filename:
+                return image_config['config']
+    # Handle old object format with 'images' key for backwards compatibility
+    elif isinstance(config_data, dict):
+        for image_config in config_data.get('images', []):
+            if image_config['filename'] == filename:
+                return image_config['config']
+        if 'default_config' in config_data:
+            return config_data['default_config']
+
+    # Return default config if no match found
+    return {
+        'horizontal': 0.5,
+        'vertical': 0.5,
         'scale': 0.3,
         'rotation': 0,
         'opacity': 0.9,
-        'displacementStrength': 0.5
-    })
+        'fold_shadow_intensity': 0.5
+    }
 
 def process_images():
     """Main function to process all images"""
@@ -100,14 +111,16 @@ def process_images():
             image_config = get_image_config(filename, config_data)
 
             print(f"Processing: {filename}")
-            print(f"  Config: x={image_config['x']}, y={image_config['y']}, "
-                  f"scale={image_config['scale']}, rotation={image_config['rotation']}")
+            print(f"  Config: horizontal={image_config.get('horizontal', 0.5)}, vertical={image_config.get('vertical', 0.5)}, "
+                  f"scale={image_config.get('scale', 0.3)}, rotation={image_config.get('rotation', 0)}, "
+                  f"opacity={image_config.get('opacity', 0.9)}, fold_shadow_intensity={image_config.get('fold_shadow_intensity', 0.5)}")
 
             # Load main image
             with open(file_path, 'rb') as f:
                 main_bytes = f.read()
 
             # Process the mockup
+            print(f"  Processing with config: {image_config}")
             result_bytes = process_mockup(main_bytes, logo_bytes, image_config)
 
             # Save the result
