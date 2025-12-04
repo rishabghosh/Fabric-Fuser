@@ -281,27 +281,49 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
     }
   };
 
-  // Handle zoom with mouse wheel
+  // Handle scrolling with mouse wheel or trackpad
   const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
     e.preventDefault();
-    const canvas = canvasRef.current;
-    if (!canvas) return;
 
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+    // Scroll the canvas by adjusting pan
+    setPan({
+      x: pan.x - e.deltaX,
+      y: pan.y - e.deltaY,
+    });
+  };
 
-    // Zoom factor
-    const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
-    const newZoom = Math.min(Math.max(0.1, zoom * zoomFactor), 10);
+  // Zoom in with button
+  const handleZoomIn = () => {
+    const newZoom = Math.min(zoom * 1.2, 10);
 
-    // Adjust pan to zoom towards mouse position
-    const zoomPointX = (mouseX - pan.x) / zoom;
-    const zoomPointY = (mouseY - pan.y) / zoom;
+    // Keep the center point constant while zooming
+    const centerX = dimensions.width / 2;
+    const centerY = dimensions.height / 2;
+
+    const zoomPointX = (centerX - pan.x) / zoom;
+    const zoomPointY = (centerY - pan.y) / zoom;
 
     setPan({
-      x: mouseX - zoomPointX * newZoom,
-      y: mouseY - zoomPointY * newZoom,
+      x: centerX - zoomPointX * newZoom,
+      y: centerY - zoomPointY * newZoom,
+    });
+    setZoom(newZoom);
+  };
+
+  // Zoom out with button
+  const handleZoomOut = () => {
+    const newZoom = Math.max(zoom / 1.2, 0.1);
+
+    // Keep the center point constant while zooming
+    const centerX = dimensions.width / 2;
+    const centerY = dimensions.height / 2;
+
+    const zoomPointX = (centerX - pan.x) / zoom;
+    const zoomPointY = (centerY - pan.y) / zoom;
+
+    setPan({
+      x: centerX - zoomPointX * newZoom,
+      y: centerY - zoomPointY * newZoom,
     });
     setZoom(newZoom);
   };
@@ -363,15 +385,34 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
           </div>
         </div>
       )}
-      {(zoom !== 1 || pan.x !== 0 || pan.y !== 0) && (
+      {/* Zoom Controls */}
+      <div className="absolute bottom-4 left-4 flex flex-col gap-2 z-10">
+        <button
+          onClick={handleZoomIn}
+          className="bg-white/90 hover:bg-white text-gray-800 p-2 rounded-lg shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white/90"
+          title="Zoom In"
+          disabled={zoom >= 10}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><line x1="11" x2="11" y1="8" y2="14"/><line x1="8" x2="14" y1="11" y2="11"/></svg>
+        </button>
+        <button
+          onClick={handleZoomOut}
+          className="bg-white/90 hover:bg-white text-gray-800 p-2 rounded-lg shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white/90"
+          title="Zoom Out"
+          disabled={zoom <= 0.1}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><line x1="8" x2="14" y1="11" y2="11"/></svg>
+        </button>
+        {(zoom !== 1 || pan.x !== 0 || pan.y !== 0) && (
           <button
             onClick={handleReset}
-            className="absolute top-4 left-4 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-lg shadow-lg transition-all z-10"
+            className="bg-white/90 hover:bg-white text-gray-800 p-2 rounded-lg shadow-lg transition-all"
             title="Reset Zoom & Pan"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
           </button>
-      )}
+        )}
+      </div>
       {(mainImageSrc && logoImageSrc) && (
           <button
             onClick={handleDownload}
