@@ -36,21 +36,21 @@
     "filename": "pullover-hoodie-mockup-featuring-a-young-man-in-a-studio-21593.png",
     "config": {
       "horizontal": 0.5,
-      "vertical": 0.587,
-      "scale": 0.05,
+      "vertical": 0.595,
+      "scale": 0.047,
       "rotation": 0,
-      "opacity": 0.74,
-      "fold_shadow_intensity": 0.08
+      "opacity": 0.7,
+      "fold_shadow_intensity": 0.04
     }
   },
   {
     "filename": "gildan-hoodie-mockup-featuring-a-man-standing-in-a-studio-m32800.png",
     "config": {
       "horizontal": 0.486,
-      "vertical": 0.572,
+      "vertical": 0.577,
       "scale": 0.09,
       "rotation": 0,
-      "opacity": 0.74,
+      "opacity": 0.7,
       "fold_shadow_intensity": 0.13
     }
   },
@@ -58,11 +58,33 @@
     "filename": "gildan-hoodie-mockup-featuring-a-man-with-a-serious-look-standing-in-a-studio-m37542.png",
     "config": {
       "horizontal": 0.474,
-      "vertical": 0.599,
+      "vertical": 0.604,
       "scale": 0.09,
       "rotation": 0,
-      "opacity": 0.74,
-      "fold_shadow_intensity": 0.16
+      "opacity": 0.7,
+      "fold_shadow_intensity": 0
+    }
+  },
+  {
+    "filename": "pullover-hoodie-mockup-of-a-red-hair-man-standing-in-a-studio-23000.png",
+    "config": {
+      "horizontal": 0.524,
+      "vertical": 0.635,
+      "scale": 0.09,
+      "rotation": 0,
+      "opacity": 0.7,
+      "fold_shadow_intensity": 0.06
+    }
+  },
+  {
+    "filename": "hoodie-mockup-of-a-long-haired-man-doing-a-smoldering-look-m22442.png",
+    "config": {
+      "horizontal": 0.497,
+      "vertical": 0.772,
+      "scale": 0.1,
+      "rotation": 359,
+      "opacity": 0.7,
+      "fold_shadow_intensity": 0
     }
   }
 ]
