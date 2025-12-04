@@ -86,5 +86,60 @@
       "opacity": 0.7,
       "fold_shadow_intensity": 0
     }
+  },
+  {
+    "filename": "gildan-hoodie-mockup-featuring-a-smiling-woman-posing-against-a-colorful-backdrop-m37552.png",
+    "config": {
+      "horizontal": 0.47,
+      "vertical": 0.687,
+      "scale": 0.1,
+      "rotation": 0,
+      "opacity": 0.7,
+      "fold_shadow_intensity": 0.08
+    }
+  },
+  {
+    "filename": "mockup-featuring-a-woman-wearing-a-hoodie-from-gildan-in-a-studio-m37533.png",
+    "config": {
+      "horizontal": 0.485,
+      "vertical": 0.695,
+      "scale": 0.105,
+      "rotation": 2,
+      "opacity": 0.7,
+      "fold_shadow_intensity": 0
+    }
+  },
+  {
+    "filename": "hoodie-mockup-featuring-a-woman-in-a-casual-look-against-a-white-background-21770.png",
+    "config": {
+      "horizontal": 0.516,
+      "vertical": 0.695,
+      "scale": 0.045,
+      "rotation": 0,
+      "opacity": 0.7,
+      "fold_shadow_intensity": 0
+    }
+  },
+  {
+    "filename": "mockup-of-a-woman-wearing-a-pullover-hoodie-20908.png",
+    "config": {
+      "horizontal": 0.492,
+      "vertical": 0.657,
+      "scale": 0.045,
+      "rotation": 358,
+      "opacity": 0.7,
+      "fold_shadow_intensity": 0
+    }
+  },
+  {
+    "filename": "pullover-hoodie-mockup-of-a-woman-with-natural-curly-hair-m28863.png",
+    "config": {
+      "horizontal": 0.519,
+      "vertical": 0.55,
+      "scale": 0.1,
+      "rotation": 0,
+      "opacity": 0.7,
+      "fold_shadow_intensity": 0.08
+    }
   }
 ]
