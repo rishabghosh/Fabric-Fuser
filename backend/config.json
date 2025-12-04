@@ -20,5 +20,16 @@
       "opacity": 1,
       "fold_shadow_intensity": 0.91
     }
+  },
+  {
+    "filename": "pullover-hoodie-mockup-featuring-a-bearded-man-with-a-beanie-28312.png",
+    "config": {
+      "horizontal": 0.417,
+      "vertical": 0.671,
+      "scale": 0.1,
+      "rotation": 5,
+      "opacity": 0.9,
+      "fold_shadow_intensity": 0
+    }
   }
 ]
