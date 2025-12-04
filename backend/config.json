@@ -27,9 +27,42 @@
       "horizontal": 0.417,
       "vertical": 0.671,
       "scale": 0.1,
-      "rotation": 5,
+      "rotation": 355,
       "opacity": 0.9,
       "fold_shadow_intensity": 0
+    }
+  },
+  {
+    "filename": "pullover-hoodie-mockup-featuring-a-young-man-in-a-studio-21593.png",
+    "config": {
+      "horizontal": 0.5,
+      "vertical": 0.587,
+      "scale": 0.05,
+      "rotation": 0,
+      "opacity": 0.74,
+      "fold_shadow_intensity": 0.08
+    }
+  },
+  {
+    "filename": "gildan-hoodie-mockup-featuring-a-man-standing-in-a-studio-m32800.png",
+    "config": {
+      "horizontal": 0.486,
+      "vertical": 0.572,
+      "scale": 0.09,
+      "rotation": 0,
+      "opacity": 0.74,
+      "fold_shadow_intensity": 0.13
+    }
+  },
+  {
+    "filename": "gildan-hoodie-mockup-featuring-a-man-with-a-serious-look-standing-in-a-studio-m37542.png",
+    "config": {
+      "horizontal": 0.474,
+      "vertical": 0.599,
+      "scale": 0.09,
+      "rotation": 0,
+      "opacity": 0.74,
+      "fold_shadow_intensity": 0.16
     }
   }
 ]
