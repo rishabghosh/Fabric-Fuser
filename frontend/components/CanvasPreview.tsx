@@ -16,6 +16,12 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Zoom and Pan state
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
+  const [startPan, setStartPan] = useState({ x: 0, y: 0 });
+
   // Rate limiting: track request timestamps (max 3 per second)
   const requestTimestamps = useRef<number[]>([]);
 
@@ -153,15 +159,21 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
+    // Apply zoom and pan transformations
+    ctx.save();
+    ctx.translate(pan.x, pan.y);
+    ctx.scale(zoom, zoom);
+
     if (processedImage) {
       // Draw processed image from backend (with fold shadow effect)
       const img = new Image();
       img.onload = () => {
-        ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+        ctx.clearRect(-pan.x / zoom, -pan.y / zoom, dimensions.width / zoom, dimensions.height / zoom);
         const scale = Math.min(dimensions.width / img.width, dimensions.height / img.height);
         const x = (dimensions.width - img.width * scale) / 2;
         const y = (dimensions.height - img.height * scale) / 2;
         ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+        ctx.restore();
       };
       img.src = processedImage;
     } else if (mainImageSrc && logoImageSrc) {
@@ -175,7 +187,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
       const drawComposite = () => {
         if (!mainLoaded || !logoLoaded) return;
 
-        ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+        ctx.clearRect(-pan.x / zoom, -pan.y / zoom, dimensions.width / zoom, dimensions.height / zoom);
 
         // Calculate main image scale to fit canvas
         const mainScale = Math.min(dimensions.width / mainImg.width, dimensions.height / mainImg.height);
@@ -195,7 +207,7 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
         const logoCenterX = mainX + (mainWidth * config.horizontal);
         const logoCenterY = mainY + (mainHeight * config.vertical);
 
-        // Save context state
+        // Save context state for logo transformations
         ctx.save();
 
         // Move to logo center position
@@ -216,7 +228,9 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
           logoScaledHeight
         );
 
-        // Restore context state
+        // Restore logo transformations
+        ctx.restore();
+        // Restore zoom/pan transformations
         ctx.restore();
       };
 
@@ -236,16 +250,17 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
       // Only main image
       const mainImg = new Image();
       mainImg.onload = () => {
-        ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+        ctx.clearRect(-pan.x / zoom, -pan.y / zoom, dimensions.width / zoom, dimensions.height / zoom);
         const scale = Math.min(dimensions.width / mainImg.width, dimensions.height / mainImg.height);
         const x = (dimensions.width - mainImg.width * scale) / 2;
         const y = (dimensions.height - mainImg.height * scale) / 2;
         ctx.drawImage(mainImg, x, y, mainImg.width * scale, mainImg.height * scale);
+        ctx.restore();
       };
       mainImg.src = mainImageSrc;
     } else {
       // Empty state
-      ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+      ctx.clearRect(-pan.x / zoom, -pan.y / zoom, dimensions.width / zoom, dimensions.height / zoom);
       ctx.fillStyle = '#f3f4f6';
       ctx.fillRect(0, 0, dimensions.width, dimensions.height);
       ctx.fillStyle = '#9ca3af';
@@ -253,8 +268,9 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
       ctx.textBaseline = 'middle';
       ctx.font = '16px sans-serif';
       ctx.fillText("Upload Main Image and Logo", dimensions.width / 2, dimensions.height / 2);
+      ctx.restore();
     }
-  }, [processedImage, mainImageSrc, logoImageSrc, dimensions, config]);
+  }, [processedImage, mainImageSrc, logoImageSrc, dimensions, config, zoom, pan]);
 
   const handleDownload = () => {
     if (canvasRef.current) {
@@ -265,12 +281,73 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
     }
   };
 
+  // Handle zoom with mouse wheel
+  const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // Zoom factor
+    const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+    const newZoom = Math.min(Math.max(0.1, zoom * zoomFactor), 10);
+
+    // Adjust pan to zoom towards mouse position
+    const zoomPointX = (mouseX - pan.x) / zoom;
+    const zoomPointY = (mouseY - pan.y) / zoom;
+
+    setPan({
+      x: mouseX - zoomPointX * newZoom,
+      y: mouseY - zoomPointY * newZoom,
+    });
+    setZoom(newZoom);
+  };
+
+  // Handle pan start
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    setIsPanning(true);
+    setStartPan({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+  };
+
+  // Handle pan move
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isPanning) return;
+    setPan({
+      x: e.clientX - startPan.x,
+      y: e.clientY - startPan.y,
+    });
+  };
+
+  // Handle pan end
+  const handleMouseUp = () => {
+    setIsPanning(false);
+  };
+
+  // Handle pan end when mouse leaves canvas
+  const handleMouseLeave = () => {
+    setIsPanning(false);
+  };
+
+  // Reset zoom and pan
+  const handleReset = () => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
+
   return (
     <div className="relative w-full h-full bg-[#e5e5e5] rounded-xl overflow-hidden shadow-inner border border-gray-200" ref={containerRef}>
-      <canvas 
+      <canvas
         ref={canvasRef}
-        style={{ width: dimensions.width, height: dimensions.height }}
+        style={{ width: dimensions.width, height: dimensions.height, cursor: isPanning ? 'grabbing' : 'grab' }}
         className="block"
+        onWheel={handleWheel}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
       />
       {isDrawing && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm">
@@ -286,8 +363,17 @@ const CanvasPreview: React.FC<CanvasPreviewProps> = ({ mainImageSrc, logoImageSr
           </div>
         </div>
       )}
+      {(zoom !== 1 || pan.x !== 0 || pan.y !== 0) && (
+          <button
+            onClick={handleReset}
+            className="absolute top-4 left-4 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-lg shadow-lg transition-all z-10"
+            title="Reset Zoom & Pan"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          </button>
+      )}
       {(mainImageSrc && logoImageSrc) && (
-          <button 
+          <button
             onClick={handleDownload}
             className="absolute top-4 right-4 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-lg shadow-lg transition-all z-10"
             title="Download Result"
