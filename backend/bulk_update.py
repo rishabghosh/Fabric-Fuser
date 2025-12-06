@@ -24,7 +24,7 @@ def load_config(config_path):
         sys.exit(1)
 
 def get_image_config(filename, config_data):
-    """Get configuration for a specific image, or return default config"""
+    """Get configuration for a specific image, or return None if not in config"""
     # Handle array format directly
     if isinstance(config_data, list):
         for image_config in config_data:
@@ -35,18 +35,9 @@ def get_image_config(filename, config_data):
         for image_config in config_data.get('images', []):
             if image_config['filename'] == filename:
                 return image_config['config']
-        if 'default_config' in config_data:
-            return config_data['default_config']
 
-    # Return default config if no match found
-    return {
-        'horizontal': 0.5,
-        'vertical': 0.5,
-        'scale': 0.3,
-        'rotation': 0,
-        'opacity': 0.9,
-        'fold_shadow_intensity': 0.5
-    }
+    # Return None if no match found (file not in config)
+    return None
 
 def process_images():
     """Main function to process all images"""
@@ -71,9 +62,6 @@ def process_images():
         print(f"Error: Configuration file not found at {config_json_path}")
         sys.exit(1)
 
-    # Create output directory if it doesn't exist
-    os.makedirs(output_dir, exist_ok=True)
-
     # Load configuration
     config_data = load_config(config_json_path)
 
@@ -83,32 +71,41 @@ def process_images():
 
     print(f"Logo loaded from: {logo_path}")
     print(f"Processing images from: {main_images_dir}")
-    print(f"Output directory: {output_dir}")
+    print("Files will be updated in place")
     print("-" * 50)
 
-    # Supported image formats
-    image_extensions = {'.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.webp'}
+    # Get list of files to process from config.json
+    files_to_process = []
+    if isinstance(config_data, list):
+        files_to_process = [item['filename'] for item in config_data]
+    elif isinstance(config_data, dict):
+        files_to_process = [item['filename'] for item in config_data.get('images', [])]
 
-    # Process all images in the directory
+    print(f"Files to process from config.json: {len(files_to_process)}")
+    print("-" * 50)
+
+    # Process all images listed in config.json
     processed_count = 0
     skipped_count = 0
     error_count = 0
 
-    for filename in os.listdir(main_images_dir):
+    for filename in files_to_process:
         file_path = os.path.join(main_images_dir, filename)
 
-        # Skip if not a file
+        # Skip if file doesn't exist
         if not os.path.isfile(file_path):
-            continue
-
-        # Skip if not a supported image format
-        if Path(filename).suffix.lower() not in image_extensions:
+            print(f"Skipped: {filename} (file not found in directory)")
             skipped_count += 1
             continue
 
         try:
             # Get configuration for this image
             image_config = get_image_config(filename, config_data)
+
+            if image_config is None:
+                print(f"Skipped: {filename} (not in config)")
+                skipped_count += 1
+                continue
 
             print(f"Processing: {filename}")
             print(f"  Config: horizontal={image_config.get('horizontal', 0.5)}, vertical={image_config.get('vertical', 0.5)}, "
@@ -123,14 +120,11 @@ def process_images():
             print(f"  Processing with config: {image_config}")
             result_bytes = process_mockup(main_bytes, logo_bytes, image_config)
 
-            # Save the result
-            output_filename = f"processed_{filename}"
-            output_path = os.path.join(output_dir, output_filename)
-
-            with open(output_path, 'wb') as f:
+            # Replace the original file with processed result
+            with open(file_path, 'wb') as f:
                 f.write(result_bytes)
 
-            print(f"  Saved: {output_filename}")
+            print(f"  Updated: {filename}")
             processed_count += 1
 
         except Exception as e:
